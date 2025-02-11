@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bzip.project.mapper.PostMapper">
+    <resultMap id="postMap" type="com.bzip.project.domain.Post">
+        <id column="uid" property="uid"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="write_date" property="writeDate"/>
+        <result column="deleteyn" property="deleteyn"/>
+        <association property="user" javaType="com.bzip.project.domain.User">
+            <id column="user_uid" property="uid"/>
+            <result column="email" property="email"/>
+            <result column="password" property="password"/>
+            <result column="name" property="name"/>
+            <result column="nickname" property="nickname"/>
+            <result column="signup_date" property="signupDate"/>
+            <result column="auth" property="auth"/>
+            <result column="account_status" property="accountStatus"/>
+        </association>
+    </resultMap>
+    
+    <insert id="insertPost">
+        INSERT INTO post (title,content,user_uid)
+        VALUES(#{title},#{content},#{user.uid});
+    </insert>
+
+    <select id="selectPostByTitle" resultMap="postMap">
+        SELECT post.title, post.content, post.write_date, post.deleteyn, user.nickname
+        FROM post
+        JOIN user
+        ON post.user_uid = user.uid
+        WHERE post.title = #{title} AND post.deleteyn = 'n';
+    </select>
+
+    <select id="selectPostByNickname" resultMap="postMap">
+        SELECT post.title, post.content, post.write_date, post.deleteyn, user.nickname
+        FROM post
+        JOIN user
+        ON post.user_uid = user.uid
+        WHERE user.nickname = #{nickname} AND post.deleteyn = 'n';
+    </select>
+    
+    <select id="selectPostByUid" resultMap="postMap">
+        SELECT post.uid, post.title, post.content, post.write_date, post.deleteyn, post.user_uid, user.nickname
+        FROM post
+        JOIN user
+        ON post.user_uid = user.uid
+        WHERE post.uid = #{uid}
+    </select>
+
+    <update id="updatePost">
+        UPDATE post
+        SET title = #{title}, content = #{content}
+        WHERE uid = #{uid}
+    </update>
+
+    <update id="deletePost">
+        UPDATE post
+        SET deleteyn = 'y'
+        WHERE uid = #{uid}
+    </update>
+</mapper>
