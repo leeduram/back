@@ -117,4 +117,27 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @PostMapping("/api/page")
+    public ResponseEntity<?> getPosts(@RequestBody PostPaginationRequestDTO postPaginationRequestDTO) {
+        try {
+            PostPaginationResponseDTO resp = postService.getPagedPosts(postPaginationRequestDTO.getPage(), postPaginationRequestDTO.getLimit());
+            return ResponseEntity.status(HttpStatus.OK).body(resp);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/api/total")
+    public ResponseEntity<?> getTotal(@RequestParam int page, @RequestParam int limit) {
+        try {
+            PostPaginationResponseDTO resp = postService.getPagedPosts(page, limit);
+
+            long totalPosts = postService.getTotalPosts();
+
+            return ResponseEntity.status(HttpStatus.OK).body(new PostPaginationResponseDTO(totalPosts, resp.getPosts()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

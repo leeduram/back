@@ -61,4 +61,19 @@
         SET deleteyn = 'y'
         WHERE uid = #{uid}
     </update>
+
+    <select id="selectPostsWithPagination" resultMap="postMap">
+        SELECT post.uid, post.title, post.content, post.write_date, post.deleteyn, post.user_uid, user.nickname
+        FROM post
+        JOIN user
+        ON post.user_uid = user.uid
+        WHERE post.deleteyn = 'n'
+        ORDER BY post.write_date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countPosts" resultType="long">
+        SELECT COUNT(*)
+        FROM post
+        WHERE deleteyn = 'n'
+    </select>
 </mapper>

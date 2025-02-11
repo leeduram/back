@@ -2,6 +2,7 @@ package com.bzip.project.service;
 
 import com.bzip.project.domain.Post;
 import com.bzip.project.domain.User;
+import com.bzip.project.dto.PostPaginationResponseDTO;
 import com.bzip.project.dto.RequestNicknameDTO;
 import com.bzip.project.dto.RequestTitleDTO;
 import com.bzip.project.mapper.PostMapper;
@@ -64,5 +65,17 @@ public class PostService {
             throw new Exception("작성자만 게시글을 삭제할 수 잇습니다.");
         }
         postMapper.deletePost(post);
+    }
+
+    public PostPaginationResponseDTO getPagedPosts (int page, int limit) {
+        int offset = (page - 1) * limit;
+        List<Post> posts = postMapper.selectPostsWithPagination(limit, offset);
+        long totalPosts = postMapper.countPosts(); // 전체 게시글 수 가져오기
+
+        return new PostPaginationResponseDTO(totalPosts, posts);
+    }
+
+    public long getTotalPosts() {
+        return postMapper.countPosts();
     }
 }
