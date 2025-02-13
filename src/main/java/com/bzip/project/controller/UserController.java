@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class UserController {
@@ -57,9 +62,28 @@ public class UserController {
             User findUser = userService.login(user);
             HttpSession session = request.getSession();
             session.setAttribute("userUid", findUser.getUid());
+            session.setAttribute("nickname", findUser.getNickname());
+            session.setAttribute("signupDate", findUser.getSignupDate());
             session.setAttribute("auth", findUser.getAuth());
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @GetMapping("/api/info")
+    public ResponseEntity<?> info(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            String nickname = (String) session.getAttribute("nickname");
+            LocalDateTime signupDate = (LocalDateTime) session.getAttribute("signupDate");
+
+            User user = new User();
+            user.setNickname(nickname);
+            user.setSignupDate(signupDate);
+
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
