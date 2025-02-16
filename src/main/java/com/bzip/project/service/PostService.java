@@ -3,13 +3,10 @@ package com.bzip.project.service;
 import com.bzip.project.domain.Post;
 import com.bzip.project.domain.User;
 import com.bzip.project.dto.PostPaginationResponseDTO;
-import com.bzip.project.dto.RequestNicknameDTO;
-import com.bzip.project.dto.RequestTitleDTO;
 import com.bzip.project.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -26,22 +23,6 @@ public class PostService {
             throw new Exception();
         }
         postMapper.insertPost(post);
-    }
-
-    public List<Post> findPostByTitle(RequestTitleDTO requestTitleDTO) throws Exception {
-        List<Post> post = postMapper.selectPostByTitle(requestTitleDTO.getTitle());
-        if (post == null) {
-            throw new Exception();
-        }
-        return post;
-    }
-
-    public List<Post> findPostByNickname(RequestNicknameDTO requestNicknameDTO) throws Exception {
-        List<Post> post = postMapper.selectPostByNickname(requestNicknameDTO.getNickname());
-        if (post == null){
-            throw new Exception();
-        }
-        return post;
     }
 
     public void modifyPost(Post post, User user) throws Exception {
@@ -78,5 +59,18 @@ public class PostService {
 
     public long getTotalPosts() {
         return postMapper.countPosts();
+    }
+
+    public Post getPostDataForView(int uid) throws Exception {
+        Post post = postMapper.selectPostByUid(uid);
+        if (post == null) {
+            throw new Exception("게시글을 찾을 수 없습니다.");
+        }
+
+        if ("y".equals(post.getDeleteyn())) {
+            throw new Exception("이미 삭제된 게시글입니다.");
+        }
+
+        return post;
     }
 }

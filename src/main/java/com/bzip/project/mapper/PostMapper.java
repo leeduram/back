@@ -8,8 +8,6 @@ import java.util.List;
 @Mapper
 public interface PostMapper {
     void insertPost(Post post);
-    List<Post> selectPostByTitle(String title);
-    List<Post> selectPostByNickname(String nickname);
     Post selectPostByUid (int uid);
     void updatePost(Post post);
     void deletePost(Post post);

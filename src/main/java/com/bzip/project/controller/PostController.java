@@ -45,26 +45,6 @@ public class PostController {
         }
     }
 
-    @GetMapping("/api/title")
-    public ResponseEntity<?> searchByTitle(@RequestBody RequestTitleDTO requestTitleDTO) {
-        try {
-            List<Post> post = postService.findPostByTitle(requestTitleDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(post);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-    @GetMapping("/api/nickname")
-    public ResponseEntity<?> searchByNickname(@RequestBody RequestNicknameDTO requestNicknameDTO) {
-        try {
-            List<Post> post = postService.findPostByNickname(requestNicknameDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(post);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
     @PatchMapping("/api/update")
     public ResponseEntity<?> modify(@RequestBody RequestUpdateDTO requestUpdateDTO,
                                     HttpServletRequest request) {
@@ -93,8 +73,8 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/api/delete")
-    public ResponseEntity<?> delete(@RequestBody RequestDeleteDTO requestDeleteDTO,
+    @DeleteMapping("/api/delete/{uid}")
+    public ResponseEntity<?> delete(@PathVariable int uid,
                                     HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if (session == null){
@@ -104,7 +84,7 @@ public class PostController {
         User user = new User();
         user.setUid((int) session.getAttribute("userUid"));
         Post post = new Post();
-        post.setUid(requestDeleteDTO.getUid());
+        post.setUid(uid);
         try {
             postService.modifyDeleteyn(post, user);
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -137,6 +117,21 @@ public class PostController {
 
             return ResponseEntity.status(HttpStatus.OK).body(new PostPaginationResponseDTO(totalPosts, resp.getPosts()));
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/api/view/{uid}")
+    public ResponseEntity<?> viewPost(@PathVariable (value = "uid") int uid) {
+        try {
+            Post post = postService.getPostDataForView(uid);
+            return ResponseEntity.status(HttpStatus.OK).body(post);
+        } catch (Exception e) {
+            if (e.getMessage().equals("게시글을 찾을 수 없습니다.")) {
+                return ResponseEntity.status((HttpStatus.NOT_FOUND)).build();
+            } else if (e.getMessage().equals("이미 삭제된 게시글입니다.")) {
+                return ResponseEntity.status(HttpStatus.GONE).build();
+            }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
