@@ -10,4 +10,6 @@ public interface UserMapper {
     void insertUser(User user);
     User selectEmail (String email);
     List<User> selectAll();
+    User selectUserByUid(int uid);
+    void updateUser(User user);
 }

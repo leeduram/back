@@ -27,4 +27,14 @@
     <select id="selectAll" resultMap="userMap">
         SELECT * FROM user
     </select>
+
+    <select id="selectUserByUid">
+        SELECT * FROM user WHERE uid = #{uid};
+    </select>
+
+    <update id="updateUser">
+        UPDATE user
+        SET download_permission = #{downloadPermission}
+        WHERE uid = #{uid};
+    </update>
 </mapper>
