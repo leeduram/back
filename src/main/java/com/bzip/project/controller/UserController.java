@@ -62,6 +62,7 @@ public class UserController {
             User findUser = userService.login(user);
             HttpSession session = request.getSession();
             session.setAttribute("userUid", findUser.getUid());
+            session.setAttribute("email", findUser.getEmail());
             session.setAttribute("nickname", findUser.getNickname());
             session.setAttribute("signupDate", findUser.getSignupDate());
             session.setAttribute("auth", findUser.getAuth());
@@ -75,10 +76,12 @@ public class UserController {
     public ResponseEntity<?> info(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
+            String email = (String) session.getAttribute("email");
             String nickname = (String) session.getAttribute("nickname");
             LocalDateTime signupDate = (LocalDateTime) session.getAttribute("signupDate");
 
             User user = new User();
+            user.setEmail(email);
             user.setNickname(nickname);
             user.setSignupDate(signupDate);
 
