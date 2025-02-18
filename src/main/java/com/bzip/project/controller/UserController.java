@@ -76,11 +76,13 @@ public class UserController {
     public ResponseEntity<?> info(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
+            int uid = (int) session.getAttribute("userUid");
             String email = (String) session.getAttribute("email");
             String nickname = (String) session.getAttribute("nickname");
             LocalDateTime signupDate = (LocalDateTime) session.getAttribute("signupDate");
 
             User user = new User();
+            user.setUid(uid);
             user.setEmail(email);
             user.setNickname(nickname);
             user.setSignupDate(signupDate);

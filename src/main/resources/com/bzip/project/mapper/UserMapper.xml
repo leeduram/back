@@ -12,6 +12,7 @@
         <result column="signup_date" property="signupDate"/>
         <result column="auth" property="auth"/>
         <result column="account_status" property="accountStatus"/>
+        <result column="download_permission" property="downloadPermission"/>
     </resultMap>
 
     <insert id="insertUser">
@@ -28,7 +29,7 @@
         SELECT * FROM user
     </select>
 
-    <select id="selectUserByUid">
+    <select id="selectUserByUid" resultMap="userMap">
         SELECT * FROM user WHERE uid = #{uid};
     </select>
 

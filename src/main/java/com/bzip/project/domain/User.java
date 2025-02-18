@@ -11,7 +11,7 @@ public class User {
     private LocalDateTime signupDate;
     private String auth;
     private String accountStatus;
-    private boolean DownloadPermission;
+    private boolean downloadPermission;
 
     public int getUid() {
         return uid;
@@ -78,10 +78,11 @@ public class User {
     }
 
     public boolean isDownloadPermission() {
-        return DownloadPermission;
+        return downloadPermission;
     }
 
     public void setDownloadPermission(boolean downloadPermission) {
-        DownloadPermission = downloadPermission;
+        this.downloadPermission = downloadPermission;
     }
+
 }
