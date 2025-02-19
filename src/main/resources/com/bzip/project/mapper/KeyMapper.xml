@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bzip.project.mapper.KeyMapper">
+    <resultMap id="keyMap" type="com.bzip.project.domain.Key">
+        <result column="method" property="method"/>
+        <result column="purchas_date" property="purchaseDate"/>
+        <association property="user" javaType="com.bzip.project.domain.User">
+            <id column="user_uid" property="uid"/>
+            <result column="email" property="email"/>
+            <result column="password" property="password"/>
+            <result column="name" property="name"/>
+            <result column="nickname" property="nickname"/>
+            <result column="signup_date" property="signupDate"/>
+            <result column="auth" property="auth"/>
+            <result column="account_status" property="accountStatus"/>
+        </association>
+        <association property="game" javaType="com.bzip.project.domain.Game">
+            <id column="game_uid" property="uid"/>
+            <result column="name" property="name"/>
+            <result column="amount" property="amount"/>
+        </association>
+    </resultMap>
+    <insert id="insertKey">
+        INSERT INTO `key` (user_uid, game_uid, method)
+        VALUES(#{user.uid},#{game.uid},#{method})
+    </insert>
+    
+    <select id="selectKeyByUserUid" resultMap="keyMap">
+        SELECT * FROM `key`
+        WHERE user_uid = #{uid}
+    </select>
+</mapper>
