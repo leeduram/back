@@ -20,7 +20,7 @@ public class KeyService {
     }
 
     public Key getKeyData (User user) {
-        Key key = keyMapper.selectKeyByUserUid(user);
+        Key key = keyMapper.selectKeyByUserUid(user.getUid());
         return key;
     }
 }

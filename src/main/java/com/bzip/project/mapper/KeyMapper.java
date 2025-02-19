@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface KeyMapper {
     void insertKey(Key key);
-    Key selectKeyByUserUid(User user);
+    Key selectKeyByUserUid(int uid);
 }

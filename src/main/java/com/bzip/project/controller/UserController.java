@@ -72,6 +72,17 @@ public class UserController {
         }
     }
 
+    @PostMapping("/api/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
     @GetMapping("/api/info")
     public ResponseEntity<?> info(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
