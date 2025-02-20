@@ -74,7 +74,7 @@ public class PostController {
     }
 
     @DeleteMapping("/api/delete/{uid}")
-    public ResponseEntity<?> delete(@PathVariable int uid,
+    public ResponseEntity<?> delete(@PathVariable("uid") int uid,
                                     HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if (session == null){
@@ -104,7 +104,8 @@ public class PostController {
             PostPaginationResponseDTO resp = postService.getPagedPosts(postPaginationRequestDTO.getPage(), postPaginationRequestDTO.getLimit());
             return ResponseEntity.status(HttpStatus.OK).body(resp);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
     }
 
